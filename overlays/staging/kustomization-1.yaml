@@ -1,0 +1,383 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+patches:
+- patch: |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: argocd-server
+    spec:
+      template:
+        spec:
+          containers:
+            - name: argocd-server
+              volumeMounts:
+                - mountPath: "/shared/app/custom/custom.styles.css"
+                  subPath: "custom.styles.css"
+                  name: custom-styles
+                - mountPath: "/shared/app/custom/custom2.styles.css"
+          volumes:
+            - configMap:
+                name: argocd-custom-styles
+                optional: true
+              name: custom-styles
+- target:
+    group: rbac.authorization.k8s.io
+    version: v1
+    kind: Role
+    name: argocd-server
+  patch: |-
+    - op: add
+      path: "/rules/-"
+      value:
+        apiGroups:
+          - ""
+        resources:
+          - pods/log
+        verbs:
+          - list
+          - get
+          - watch
+    - op: add
+      path: "/rules/-"
+      value:
+        apiGroups:
+          - ""
+        resources:
+          - endpoints
+          - limitranges
+          - persistentvolumeclaims
+          - pods
+          - replicationcontrollers
+          - resourcequotas
+          - serviceaccounts
+          - services
+        verbs:
+          - list
+          - get
+          - watch
+    - op: add
+      path: "/rules/-"
+      value:
+        apiGroups:
+          - rbac.authorization.k8s.io
+        resources:
+          - rolebindings
+          - roles
+        verbs:
+          - list
+          - get
+          - watch
+    - op: add
+      path: "/rules/-"
+      value:
+        apiGroups:
+          - networking.k8s.io
+        resources:
+          - ingresses
+          - networkpolicies
+        verbs:
+          - list
+          - get
+          - watch
+    - op: add
+      path: "/rules/-"
+      value:
+        apiGroups:
+          - policy
+        resources:
+          - poddisruptionbudgets
+        verbs:
+          - list
+          - get
+          - watch
+    - op: add
+      path: "/rules/-"
+      value:
+        apiGroups:
+          - bitnami.com
+        resources:
+          - sealedsecrets
+        verbs:
+          - list
+          - get
+          - watch
+    - op: add
+      path: "/rules/-"
+      value:
+        apiGroups:
+          - monitoring.coreos.com
+        resources:
+          - podmonitors
+          - prometheusrules
+          - servicemonitors
+          - alertmanagerconfigs
+        verbs:
+          - list
+          - get
+          - watch
+    - op: add
+      path: "/rules/-"
+      value:
+        apiGroups:
+          - integreatly.org
+        resources:
+          - grafanadashboards
+        verbs:
+          - list
+          - get
+          - watch
+    - op: add
+      path: "/rules/-"
+      value:
+        apiGroups:
+          - cert-manager.io
+        resources:
+          - issuers
+          - certificates
+        verbs:
+          - list
+          - get
+          - watch
+    - op: add
+      path: "/rules/-"
+      value:
+        apiGroups:
+          - apps
+        resources:
+          - controllerrevisions
+          - daemonsets
+          - deployments
+          - replicasets
+          - statefulsets
+        verbs:
+          - get
+          - list
+          - watch
+    - op: add
+      path: "/rules/-"
+      value:
+        apiGroups:
+          - autoscaling
+        resources:
+          - horizontalpodautoscalers
+        verbs:
+          - get
+          - list
+          - watch
+    - op: add
+      path: "/rules/-"
+      value:
+        apiGroups:
+          - batch
+        resources:
+          - cronjobs
+          - jobs
+        verbs:
+          - get
+          - list
+          - watch
+    - op: add
+      path: "/rules/-"
+      value:
+        apiGroups:
+          - extensions
+        resources:
+          - ingresses
+        verbs:
+          - get
+          - list
+          - watch
+    - op: add
+      path: "/rules/-"
+      value:
+        apiGroups:
+          - authentication.istio.io
+          - config.istio.io
+          - networking.istio.io
+          - security.istio.io
+        resources:
+          - ""
+        verbs:
+          - get
+          - list
+          - watch
+#  path: patches-role.yaml
+#  patch: |
+#    apiVersion: rbac.authorization.k8s.io/v1
+#    kind: Role
+#    metadata:
+#      name: argocd-server
+#    rules:
+#      - apiGroups:
+#          - ""
+#        resources:
+#          - secrets
+#          - configmaps
+#        verbs:
+#          - create
+#          - get
+#          - list
+#          - watch
+#          - update
+#          - patch
+#          - delete
+#      - apiGroups:
+#          - argoproj.io
+#        resources:
+#          - applications
+#          - appprojects
+#        verbs:
+#          - create
+#          - get
+#          - list
+#          - watch
+#          - update
+#          - delete
+#          - patch
+#      - apiGroups:
+#          - ""
+#        resources:
+#          - events
+#        verbs:
+#          - create
+#          - list
+#      - apiGroups:
+#        - ""
+#        resources:
+#        - pods/log
+#        verbs:
+#        - list
+#        - get
+#        - watch
+#      - apiGroups:
+#          - ""
+#        resources:
+#          - endpoints
+#          - limitranges
+#          - persistentvolumeclaims
+#          - pods
+#          - replicationcontrollers
+#          - resourcequotas
+#          - serviceaccounts
+#          - services
+#        verbs:
+#          - list
+#          - get
+#          - watch
+#      - apiGroups:
+#          - rbac.authorization.k8s.io
+#        resources:
+#          - rolebindings
+#          - roles
+#        verbs:
+#          - list
+#          - get
+#          - watch
+#      - apiGroups:
+#          - networking.k8s.io
+#        resources:
+#          - ingresses
+#          - networkpolicies
+#        verbs:
+#          - list
+#          - get
+#          - watch
+#      - apiGroups:
+#          - policy
+#        resources:
+#          - poddisruptionbudgets
+#        verbs:
+#          - list
+#          - get
+#          - watch
+#      - apiGroups:
+#          - bitnami.com
+#        resources:
+#          - sealedsecrets
+#        verbs:
+#          - list
+#          - get
+#          - watch
+#      - apiGroups:
+#          - monitoring.coreos.com
+#        resources:
+#          - podmonitors
+#          - prometheusrules
+#          - servicemonitors
+#          - alertmanagerconfigs
+#        verbs:
+#          - list
+#          - get
+#          - watch
+#      - apiGroups:
+#          - integreatly.org
+#        resources:
+#          - grafanadashboards
+#        verbs:
+#          - list
+#          - get
+#          - watch
+#      - apiGroups:
+#          - cert-manager.io
+#        resources:
+#          - issuers
+#          - certificates
+#        verbs:
+#          - list
+#          - get
+#          - watch
+#      - apiGroups:
+#          - apps
+#        resources:
+#          - controllerrevisions
+#          - daemonsets
+#          - deployments
+#          - replicasets
+#          - statefulsets
+#        verbs:
+#          - get
+#          - list
+#          - watch
+#      - apiGroups:
+#          - autoscaling
+#        resources:
+#          - horizontalpodautoscalers
+#        verbs:
+#          - get
+#          - list
+#          - watch
+#      - apiGroups:
+#          - batch
+#        resources:
+#          - cronjobs
+#          - jobs
+#        verbs:
+#          - get
+#          - list
+#          - watch
+#      - apiGroups:
+#          - extensions
+#        resources:
+#          - ingresses
+#        verbs:
+#          - get
+#          - list
+#          - watch
+#      - apiGroups:
+#          - authentication.istio.io
+#          - config.istio.io
+#          - networking.istio.io
+#          - security.istio.io
+#        resources:
+#          - ""
+#        verbs:
+#          - get
+#          - list
+#          - watch
+
+

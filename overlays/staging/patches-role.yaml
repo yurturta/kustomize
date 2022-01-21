@@ -1,0 +1,29 @@
+- op: add
+  path: "/rules/-"
+  value:
+    apiGroups:
+    - ""
+    resources:
+      - pods/log
+    verbs:
+      - list
+      - get
+      - watch
+#- op: add
+#  path: /rules/1
+#  value:
+    apiGroups:
+    - ""
+    resources:
+      - endpoints
+      - limitranges
+      - persistentvolumeclaims
+      - pods
+      - replicationcontrollers
+      - resourcequotas
+      - serviceaccounts
+      - services
+    verbs:
+      - list
+      - get
+      - watch
