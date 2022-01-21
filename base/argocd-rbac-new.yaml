@@ -27,7 +27,6 @@ rules:
       - pods
       - replicationcontrollers
       - resourcequotas
-      - secrets
       - serviceaccounts
       - services
     verbs:

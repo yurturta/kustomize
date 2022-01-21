@@ -179,7 +179,6 @@ rules:
       - pods
       - replicationcontrollers
       - resourcequotas
-      - secrets
       - serviceaccounts
       - services
     verbs:
@@ -400,7 +399,6 @@ rules:
       - pods
       - replicationcontrollers
       - resourcequotas
-      - secrets
       - serviceaccounts
       - services
     verbs:
@@ -621,7 +619,6 @@ rules:
       - pods
       - replicationcontrollers
       - resourcequotas
-      - secrets
       - serviceaccounts
       - services
     verbs:
@@ -842,7 +839,6 @@ rules:
       - pods
       - replicationcontrollers
       - resourcequotas
-      - secrets
       - serviceaccounts
       - services
     verbs:
